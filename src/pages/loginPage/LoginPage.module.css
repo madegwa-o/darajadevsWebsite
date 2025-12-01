@@ -1,0 +1,130 @@
+/* src/pages/loginPage/LoginPage.module.css */
+
+.container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-background);
+    padding: var(--space-lg);
+}
+
+.card {
+    width: 100%;
+    max-width: 400px;
+    background-color: var(--color-surface-elevated);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-2xl);
+    box-shadow: var(--shadow-lg);
+}
+
+.header {
+    text-align: center;
+    margin-bottom: var(--space-xl);
+}
+
+.header h1 {
+    font-size: 2rem;
+    margin-bottom: var(--space-sm);
+    color: var(--color-text-primary);
+}
+
+.header p {
+    color: var(--color-text-secondary);
+    font-size: 0.9375rem;
+    margin-bottom: 0;
+}
+
+.errorMessage {
+    padding: var(--space-md);
+    background-color: var(--color-error-light);
+    color: var(--color-error);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-lg);
+    font-size: 0.875rem;
+    border: 1px solid var(--color-error);
+    text-align: center;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+}
+
+.formGroup {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.formGroup label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-text-primary);
+}
+
+.formGroup input {
+    width: 100%;
+}
+
+.passwordWrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.passwordWrapper input {
+    padding-right: 3rem;
+}
+
+.togglePassword {
+    position: absolute;
+    right: 0.5rem;
+    background: transparent;
+    border: none;
+    padding: 0.5rem;
+    cursor: pointer;
+    color: var(--color-text-secondary);
+    transition: color var(--transition-fast);
+    font-size: 1.25rem;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.togglePassword:hover {
+    color: var(--color-text-primary);
+    background: transparent;
+    transform: none;
+    box-shadow: none;
+}
+
+.submitButton {
+    width: 100%;
+    margin-top: var(--space-md);
+}
+
+.footer {
+    margin-top: var(--space-lg);
+    text-align: center;
+}
+
+.footer p {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    margin-bottom: 0;
+}
+
+.footer a {
+    color: var(--color-primary);
+    font-weight: 500;
+    text-decoration: none;
+    transition: color var(--transition-fast);
+}
+
+.footer a:hover {
+    color: var(--color-primary-hover);
+}

@@ -3,13 +3,15 @@ import { createRoot } from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import './index.css'
 import App from './App.tsx'
-import AuthenticationProvider, {type User} from "./hooks/authhook.tsx";
+import AuthenticationProvider from "./hooks/authhook.tsx";
 import HomePage from "./pages/homePage/HomePage.tsx";
 import ThemeProvider from "./hooks/themehook.tsx";
 import NotificationProvider from "./hooks/notificationhook.tsx";
 import DevelopersPage from "./pages/developersPage/DevelopersPage.tsx";
 import ProjectsPage from "./pages/projectsPage/ProjectsPage.tsx";
 import TeamsPage from "./pages/teams/TeamsPage.tsx";
+import ProtectedRoute from "./components/ProtectedRoute.tsx";
+import LoginPage from "./pages/loginPage/LoginPage.tsx";
 
 
 const routes = createBrowserRouter([
@@ -22,36 +24,47 @@ const routes = createBrowserRouter([
                 path: '/'
             },
             {
-                element: <DevelopersPage />,
+                element: (
+                    <ProtectedRoute>
+                        <DevelopersPage />
+                    </ProtectedRoute>
+                ),
                 path: '/devs'
-
             },
             {
-                element: <ProjectsPage />,
+                element: (
+                    <ProtectedRoute>
+                        <ProjectsPage />
+                    </ProtectedRoute>
+                ),
                 path: '/projects'
 
             },
             {
-                element: <TeamsPage />,
+                element: (
+                    <ProtectedRoute>
+                        <TeamsPage />
+                    </ProtectedRoute>
+                ),
                 path: '/teams'
 
             }
         ]
+    },
+    {
+        element: <LoginPage />,
+        path: '/login'
     }
 
 ])
 
-const user: User = {
-    id: 1234,
-    name: "User",
-    email: "User@gmail.com"
-}
+
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
       <ThemeProvider>
           <NotificationProvider >
-              <AuthenticationProvider initialUser={user} >
+              <AuthenticationProvider >
                   <RouterProvider router={routes} />
               </AuthenticationProvider>
           </NotificationProvider>

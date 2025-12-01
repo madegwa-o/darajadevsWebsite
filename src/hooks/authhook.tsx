@@ -1,4 +1,12 @@
-import React, {createContext, useCallback, useContext, useState} from "react";
+// src/context/AuthenticationProvider.tsx
+import React, {
+    createContext,
+    useCallback,
+    useContext,
+    useEffect,
+    useState
+} from "react";
+import { setAuthToken, clearAuthToken } from "../utils/apiClient";
 
 export interface User {
     id: number;
@@ -10,8 +18,7 @@ interface AuthContextProps {
     user?: User;
     accessToken?: string;
     setUser: React.Dispatch<React.SetStateAction<User | undefined>>;
-    setAccessToken: React.Dispatch<React.SetStateAction<string | undefined>>;
-    login: (user: User, token?: string) => void;
+    login: (user: User, token: string) => void;
     logout: () => void;
     isAuthenticated: boolean;
 }
@@ -25,25 +32,73 @@ export const useAuth = () => {
     return ctx;
 };
 
-export default function AuthenticationProvider({children,initialUser}: { children: React.ReactNode; initialUser?: User;}): React.JSX.Element {
-    const [user, setUser] = useState<User | undefined>(initialUser);
-    const [accessToken, setAccessToken] = useState<string>();
+export default function AuthenticationProvider({
+                                                   children
+                                               }: {
+    children: React.ReactNode;
+}): React.JSX.Element {
 
-    const login = useCallback((user: User, token?: string) => {
+    const [user, setUser] = useState<User | undefined>(undefined);
+    const [accessToken, setAccessToken] = useState<string | undefined>(undefined);
+
+    // Restore user from localStorage on reload
+    useEffect(() => {
+        const storeUser = async () => {
+            const storedUser = localStorage.getItem("user");
+            if (storedUser) {
+                setUser(JSON.parse(storedUser));
+            }
+        }
+
+        storeUser();
+
+    }, []);
+
+    // Handle login
+    const login = useCallback((user: User, token: string) => {
         setAccessToken(token);
         setUser(user);
-    },[])
 
-    const logout = useCallback (() => {
-        setAccessToken('');
+        // Save user only (token is memory only)
+        localStorage.setItem("user", JSON.stringify(user));
+
+        setAuthToken(token);
+    }, []);
+
+    // Handle logout
+    const logout = useCallback(() => {
         setUser(undefined);
+        setAccessToken(undefined);
+
+        localStorage.removeItem("user");
+
+        clearAuthToken();
 
         window.location.reload();
-    },[])
-    const isAuthenticated = !!user
+    }, []);
+
+    // Listen to token refresh failure
+    useEffect(() => {
+        const handleForcedLogout = () => logout();
+
+        window.addEventListener("auth:logout", handleForcedLogout);
+        return () =>
+            window.removeEventListener("auth:logout", handleForcedLogout);
+    }, [logout]);
+
+    const isAuthenticated = !!accessToken;
 
     return (
-        <authContext.Provider value={{ user, accessToken, setUser, setAccessToken,login, logout, isAuthenticated }}>
+        <authContext.Provider
+            value={{
+                user,
+                accessToken,
+                setUser,
+                login,
+                logout,
+                isAuthenticated
+            }}
+        >
             {children}
         </authContext.Provider>
     );
